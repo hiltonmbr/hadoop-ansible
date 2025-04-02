@@ -3,7 +3,8 @@ import logging
 import argparse
 import subprocess
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.INFO,
+                    format='%(asctime)s - %(levelname)s - %(message)s')
 
 log = logging.getLogger(__name__)
 
@@ -24,22 +25,22 @@ except subprocess.CalledProcessError:
 except FileNotFoundError:
     raise Exception("Ansible is not installed.")
 
+log.info(args.option)
 if args.option == "Ping Hosts":
-    log.info("Ping hosts...")
     system(f"ansible nodes -i {ansible_inventory} -m ping")
 elif args.option == "Add SSH key":
-    log.info("Add SSH key...")
-    system(f"ansible-playbook -i {ansible_inventory} playbooks/hosts/onboard.yml --user=root -k -K")
+    system(
+        f"ansible-playbook -i {ansible_inventory} playbooks/hosts/onboard.yml --user=root -k -K")
 elif args.option == "Update Hosts":
     system(f"ansible-playbook -i {ansible_inventory} playbooks/hosts/main.yml")
 elif args.option == "Install Hadoop Cluster":
-    log.info(args.option)
-    system(f"ansible-playbook -i {ansible_inventory} playbooks/hadoop/main.yml")
+    system(
+        f"ansible-playbook -i {ansible_inventory} playbooks/hadoop/main.yml")
 elif args.option == "Launch Hadoop Cluster":
-    log.info(args.option)
-    system(f"ansible-playbook -i {ansible_inventory} playbooks/hadoop/launch.yml")
+    system(
+        f"ansible-playbook -i {ansible_inventory} playbooks/hadoop/restart.yml")
 elif args.option == "Uninstall Hadoop Cluster":
-    log.info(args.option)
-    system(f"ansible-playbook -i {ansible_inventory} playbooks/hadoop/uninstall.yml")
+    system(
+        f"ansible-playbook -i {ansible_inventory} playbooks/hadoop/uninstall.yml")
 else:
     print("Please, press F5 on Visual Studio Code to debug and choose a valid option.")

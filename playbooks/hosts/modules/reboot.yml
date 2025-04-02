@@ -4,7 +4,7 @@
     reboot_timeout: 300
   poll: 0
   register: reboot_result
-  when: ansible_os_family == "Debian"
+  when: ansible_os_family == "Debian" and ansible_os_family == "Ubuntu"
 
 - name: Reboot (RedHat/CentOS/Fedora)
   ansible.builtin.reboot:

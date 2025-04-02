@@ -1,4 +1,4 @@
-# Hadoop installation and configuration using Ansible
+# Apache Hadoop installation and configuration using Ansible
 
 ## Overview
 
@@ -20,21 +20,22 @@ Apache Hadoop is used to process and analyze large datasets. This project provid
 
 Before running the project, make sure you have:
 
-- Install `sshpass``
+- Install `sshpass`` and ansible
 
   - On Linux distros and Windows WSL:
 
-   ```bash
-   sudo apt update && apt install sshpass -y
-   ```
+  ```bash
+  sudo apt update && apt install sshpass ansible -y
+  ```
 
 - On Mac OSX:
 
-   ```bash
-   # install homebrew
-   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-   brew install sshpass
-   ```
+  ```bash
+  # install homebrew
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  brew install sshpass ansible
+  ```
+
 - Install Python 3.6+
 
 ## Setup Instructions
@@ -48,17 +49,14 @@ Before running the project, make sure you have:
 
 2. **Review Configurations:**
    Check and update configuration files and environment variables as needed for your setup.
+   Change values in `inventories/hosts.yml` and `vars/values.yml`.
 
 3. **Start the Cluster:**
-   Install Ansible:
-   ```bash
-   pip3 install ansible
-   ```
+   Use F5 or debug in Visual Studio Code and choose one option in menu.
 
 ## Accessing the Services
 
-- **NameNode Web UI:** Open [http://localhost:9870](http://localhost:9870)
-- **Code-Server (Python Notebooks for Hadoop jobs):** Open [http://localhost:8443](http://localhost:8443)
+- **NameNode Web UI:** Open [http://namenode:9870](http://namenode:9870)
 
 ## Contributing
 

@@ -1,7 +1,7 @@
 ---
-- name: Stop DFS
+- name: Stop all
   ansible.builtin.shell:
-    cmd: /opt/hadoop/sbin/stop-dfs.sh
+    cmd: /opt/hadoop/sbin/stop-all.sh
     executable: /bin/bash
   register: result
   ignore_errors: true
@@ -18,6 +18,15 @@
 - name: Start DFS
   ansible.builtin.shell:
     cmd: /opt/hadoop/sbin/start-dfs.sh
+    executable: /bin/bash
+  register: result
+
+- ansible.builtin.debug:
+    var: result
+
+- name: Start Yarn
+  ansible.builtin.shell:
+    cmd: /opt/hadoop/sbin/start-yarn.sh
     executable: /bin/bash
   register: result
 

@@ -5,9 +5,9 @@
   vars_files:
     - "../../vars/values.yml"
   tasks:
-    - name: Stop DFS
+    - name: Stop all
       ansible.builtin.shell:
-        cmd: /opt/hadoop/sbin/stop-dfs.sh
+        cmd: /opt/hadoop/sbin/stop-all.sh
         executable: /bin/bash
       register: result
       ignore_errors: true

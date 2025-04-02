@@ -1,4 +1,4 @@
-- name: "Launch Hadoop Cluster"
+- name: "Restart Hadoop Cluster"
   hosts: "server01"
   gather_facts: true 
   become: false

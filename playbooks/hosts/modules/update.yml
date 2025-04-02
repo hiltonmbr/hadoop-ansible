@@ -2,7 +2,7 @@
 - name: Update apt cache (Debian/Ubuntu)
   ansible.builtin.apt:
     update_cache: yes
-  when: ansible_os_family == "Debian"
+  when: ansible_os_family == "Debian" or ansible_os_family == "Ubuntu"
 
 - name: Update yum cache (RedHat/CentOS/Fedora)
   ansible.builtin.yum:
