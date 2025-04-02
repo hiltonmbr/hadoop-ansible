@@ -1,0 +1,21 @@
+all:
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    ansible_user: cdn
+    ansible_port: 22
+    ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
+    ansible_ssh_pipelining: true
+    allow_world_readable_tmpfiles: true
+  children:
+    nodes:
+      hosts:
+        server01:
+          ansible_host: 192.168.68.115
+        server02:
+          ansible_host: 192.168.68.116
+        server03:
+          ansible_host: 192.168.68.117
+    localhost:
+      hosts:
+        local_machine:
+          ansible_connection: local

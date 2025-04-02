@@ -1,0 +1,30 @@
+---
+- name: Add ansible user
+  ansible.builtin.user:
+    name: ansible
+    shell: "/bin/bash"
+    create_home: yes
+
+- name: Set authorized key for ansible user
+  ansible.posix.authorized_key:
+    user: ansible
+    key: "{{ ansible_user_public_key }}"
+
+- name: Add ansible user to sudoers (create directory if needed)
+  ansible.builtin.file:
+    path: /etc/sudoers.d
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Add ansible user to sudoers
+  ansible.builtin.copy:
+    dest: /etc/sudoers.d/ansible
+    owner: root
+    group: root
+    mode: "0440"
+    content: |
+      # User privileges for ansible IaC automation
+      ansible ALL=(ALL) NOPASSWD: ALL
+  validate: "visudo -cf %s"

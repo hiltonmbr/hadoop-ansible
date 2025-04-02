@@ -1,0 +1,14 @@
+---
+- name: "Hosts configure, update and install packages"
+  hosts: "bastion, k8s_control_plane, k8s_nodes, services"
+  gather_facts: true 
+  become: true
+  vars_files:
+    - "{{ playbook_dir }}/vars/values.yml"
+    - "{{ playbook_dir }}/vars/secrets.yml"
+  tasks:
+    - include_tasks: "{{ playbook_dir }}/modules/update.yml"
+    - include_tasks: "{{ playbook_dir }}/modules/reboot.yml"
+
+    
+  

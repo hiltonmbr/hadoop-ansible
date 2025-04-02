@@ -1,0 +1,10 @@
+.vagrant
+.venv
+venv
+.idea
+__pycache__/
+.DS_Store
+*tmp.yaml
+artifacts
+.env.secrets
+decrypted*

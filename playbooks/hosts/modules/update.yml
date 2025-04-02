@@ -1,0 +1,59 @@
+---
+- name: Update and upgrade packages
+  hosts: all
+  become: true
+  tasks:
+    - name: Update apt cache (Debian/Ubuntu)
+      ansible.builtin.apt:
+        update_cache: yes
+      when: ansible_os_family == "Debian"
+
+    - name: Update yum cache (RedHat/CentOS/Fedora)
+      ansible.builtin.yum:
+        update_cache: yes
+      when: ansible_os_family == "RedHat"
+
+    - name: Update dnf cache (Fedora/CentOS Stream/RHEL 8+)
+      ansible.builtin.dnf:
+        update_cache: yes
+      when: ansible_os_family == "RedHat" and ansible_distribution_major_version|int >= 8
+
+    - name: Update zypper cache (Suse)
+      ansible.builtin.zypper:
+        refresh: yes
+      when: ansible_os_family == "Suse"
+
+    - name: Update pacman cache (Archlinux)
+      ansible.builtin.pacman:
+        update_cache: yes
+      when: ansible_os_family == "Archlinux"
+
+    - name: Upgrade packages (Debian/Ubuntu)
+      ansible.builtin.apt:
+        upgrade: dist
+        autoremove: yes
+      when: ansible_os_family == "Debian"
+
+    - name: Upgrade packages (RedHat/CentOS/Fedora)
+      ansible.builtin.yum:
+        name: "*"
+        state: latest
+      when: ansible_os_family == "RedHat" and ansible_distribution_major_version|int < 8
+
+    - name: Upgrade packages (Fedora/CentOS Stream/RHEL 8+)
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+      when: ansible_os_family == "RedHat" and ansible_distribution_major_version|int >= 8
+
+    - name: Upgrade packages (Suse)
+      ansible.builtin.zypper:
+        name: "*"
+        state: latest
+        update_repo: yes
+      when: ansible_os_family == "Suse"
+
+    - name: Upgrade packages (Archlinux)
+      ansible.builtin.pacman:
+        upgrade: yes
+      when: ansible_os_family == "Archlinux"
