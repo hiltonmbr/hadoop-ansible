@@ -1,0 +1,132 @@
+---
+- name: Add /etc/hosts entries
+  ansible.builtin.lineinfile:
+    path: /etc/hosts
+    line: "{{ item.ip }} {{ item.hostname }}"
+    state: present
+  loop:
+    - {
+        ip: "{{ hostvars['server01']['ansible_host'] }}",
+        hostname: "{{ hostvars['server01']['ansible_hostname'] }}",
+      }
+    - {
+        ip: "{{ hostvars['server02']['ansible_host'] }}",
+        hostname: "{{ hostvars['server02']['ansible_hostname'] }}",
+      }
+    - {
+        ip: "{{ hostvars['server03']['ansible_host'] }}",
+        hostname: "{{ hostvars['server03']['ansible_hostname'] }}",
+      }
+
+- name: Add JAVA_HOME and HADOOP_HOME to .bashrc
+  become: false
+  ansible.builtin.blockinfile:
+    path: ~/.bashrc
+    block: |
+      export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+      export PATH=$JAVA_HOME/bin:$PATH
+      export HADOOP_HOME=/opt/hadoop
+      export PATH=$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$PATH
+    marker: "# {mark} ANSIBLE MANAGED JAVA_HOME and HADOOP_HOME"
+
+- name: Source .bashrc to update environment variables
+  become: false
+  ansible.builtin.shell:
+    cmd: source ~/.bashrc
+    executable: /bin/bash
+
+- name: Add JAVA_HOME to hadoop-env.sh if it doesn't exist
+  ansible.builtin.lineinfile:
+    path: /opt/hadoop/etc/hadoop/hadoop-env.sh
+    line: export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+    state: present
+    create: yes
+
+- name: Configure core-site.xml
+  ansible.builtin.copy:
+    dest: /opt/hadoop/etc/hadoop/core-site.xml
+    content: |
+      <configuration>
+          <property>
+              <name>fs.defaultFS</name>
+              <value>hdfs://namenode:9000</value>
+          </property>
+      </configuration>
+
+- name: Configure hdfs-site.xml
+  ansible.builtin.copy:
+    dest: /opt/hadoop/etc/hadoop/hdfs-site.xml
+    content: |
+      <configuration>
+        <property>
+          <name>dfs.webhdfs.enabled</name>
+          <value>true</value>
+        </property>
+        <property>
+          <name>dfs.datanode.use.datanode.hostname</name>
+          <value>false</value>
+        </property>
+        <property>
+          <name>dfs.client.use.datanode.hostname</name>
+          <value>false</value>
+        </property>
+        <property>
+          <name>dfs.datanode.data.dir</name>
+          <value>file:///opt/hadoop/datanode</value>
+          <description>DataNode directory</description>
+        </property>
+        <property>
+          <name>dfs.namenode.name.dir</name>
+          <value>file:///opt/hadoop/namenode</value>
+          <description>NameNode directory for namespace and transaction logs storage.</description>
+        </property>
+        <property>
+          <name>dfs.namenode.datanode.registration.ip-hostname-check</name>
+          <value>false</value>
+        </property>
+        <property>
+          <name>dfs.namenode.rpc-bind-host</name>
+          <value>0.0.0.0</value>
+        </property>
+        <property>
+          <name>dfs.namenode.servicerpc-bind-host</name>
+          <value>0.0.0.0</value>
+        </property>
+      </configuration>
+
+- name: Configure mapred-site.xml
+  ansible.builtin.copy:
+    dest: /opt/hadoop/etc/hadoop/mapred-site.xml
+    content: |
+      <configuration>
+        <property>
+            <name>mapreduce.framework.name</name>
+            <value>yarn</value>
+        </property>
+      </configuration>
+
+- name: Configure yarn-site.xml
+  ansible.builtin.copy:
+    dest: /opt/hadoop/etc/hadoop/yarn-site.xml
+    content: |
+      <configuration>
+        <property>
+            <name>yarn.nodemanager.aux-services</name>
+            <value>mapreduce_shuffle</value>
+        </property>
+        <property>
+            <name>yarn.nodemanager.aux-services.mapreduce.shuffle.class</name>
+            <value>org.apache.hadoop.mapred.ShuffleHandler</value>
+        </property>
+        <property>
+            <name>yarn.resourcemanager.hostname</name>
+            <value>namenode</value>
+        </property>
+      </configuration>
+
+- name: Configure workers
+  ansible.builtin.copy:
+    content: |
+      {{ hostvars['server02']['ansible_hostname'] }}
+      {{ hostvars['server03']['ansible_hostname'] }}
+    dest: /opt/hadoop/etc/hadoop/workers

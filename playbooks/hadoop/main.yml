@@ -1,0 +1,19 @@
+---
+- name: "Install and Configure Hadoop Cluster"
+  hosts: "nodes"
+  gather_facts: true 
+  become: true
+  vars_files:
+    - "../../vars/values.yml"
+  tasks:
+    - include_tasks: "modules/install.yml"
+    - include_tasks: "modules/configure.yml"
+
+- name: "Launch Hadoop Cluster"
+  hosts: "server01"
+  gather_facts: true 
+  become: false
+  vars_files:
+    - "../../vars/values.yml"
+  tasks:
+    - include_tasks: "modules/launch.yml" 

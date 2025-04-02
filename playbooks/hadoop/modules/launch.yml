@@ -1,0 +1,25 @@
+---
+- name: Stop DFS
+  ansible.builtin.shell:
+    cmd: /opt/hadoop/sbin/stop-dfs.sh
+    executable: /bin/bash
+  register: result
+  ignore_errors: true
+
+- name: Format namenode
+  ansible.builtin.shell:
+    cmd: /opt/hadoop/bin/hdfs namenode -format -force -nonInteractive
+    executable: /bin/bash
+  register: result
+
+- ansible.builtin.debug:
+    var: result
+
+- name: Start DFS
+  ansible.builtin.shell:
+    cmd: /opt/hadoop/sbin/start-dfs.sh
+    executable: /bin/bash
+  register: result
+
+- ansible.builtin.debug:
+    var: result

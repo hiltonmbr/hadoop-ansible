@@ -1,0 +1,28 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Run Task",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "./main.py",
+      "args": ["--option", "${input:taskChoice}"],
+      "console": "integratedTerminal"
+    }
+  ],
+  "inputs": [
+    {
+      "id": "taskChoice",
+      "type": "pickString",
+      "description": "Choose an option: ",
+      "options": [
+        "Ping Hosts",
+        "Add SSH key",
+        "Update Hosts",
+        "Install Hadoop Cluster",
+        "Launch Hadoop Cluster",
+        "Uninstall Hadoop Cluster"
+      ]
+    }
+  ]
+}

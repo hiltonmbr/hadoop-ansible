@@ -1,37 +1,33 @@
 ---
-- name: Reboot if kernel was updated (Debian/Ubuntu)
+- name: Reboot (Debian/Ubuntu)
   ansible.builtin.reboot:
     reboot_timeout: 300
-  async: 45
   poll: 0
   register: reboot_result
-  when: ansible_os_family == "Debian" 
+  when: ansible_os_family == "Debian"
 
-- name: Reboot if kernel was updated (RedHat/CentOS/Fedora)
+- name: Reboot (RedHat/CentOS/Fedora)
   ansible.builtin.reboot:
     reboot_timeout: 300
-  async: 45
   poll: 0
   register: reboot_result
-  when: ansible_os_family == "RedHat" 
+  when: ansible_os_family == "RedHat"
 
-- name: Reboot if kernel was updated (Suse)
+- name: Reboot (Suse)
   ansible.builtin.reboot:
     reboot_timeout: 300
-  async: 45
   poll: 0
   register: reboot_result
-  when: ansible_os_family == "Suse" 
+  when: ansible_os_family == "Suse"
 
-- name: Reboot if kernel was updated (Archlinux)
+- name: Reboot (Archlinux)
   ansible.builtin.reboot:
     reboot_timeout: 300
-  async: 45
   poll: 0
   register: reboot_result
-  when: ansible_os_family == "Archlinux" 
+  when: ansible_os_family == "Archlinux"
 
 - name: Wait for reboot to complete
   ansible.builtin.wait_for_connection:
     timeout: 300
-  when: reboot_result is defined and reboot_result.rebooted
+  when: reboot_result is defined 

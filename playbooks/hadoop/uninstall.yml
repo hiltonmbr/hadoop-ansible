@@ -1,0 +1,25 @@
+- name: "Uninstall Hadoop Cluster"
+  hosts: "server01"
+  gather_facts: true
+  become: false
+  vars_files:
+    - "../../vars/values.yml"
+  tasks:
+    - name: Stop DFS
+      ansible.builtin.shell:
+        cmd: /opt/hadoop/sbin/stop-dfs.sh
+        executable: /bin/bash
+      register: result
+      ignore_errors: true
+
+- name: "Uninstall Hadoop Cluster"
+  hosts: "nodes"
+  gather_facts: true
+  become: true
+  vars_files:
+    - "../../vars/values.yml"
+  tasks:
+    - name: Remove Hadoop directory
+      ansible.builtin.file:
+        path: /opt/hadoop
+        state: absent

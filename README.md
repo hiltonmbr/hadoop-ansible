@@ -9,7 +9,6 @@ Apache Hadoop is used to process and analyze large datasets. This project provid
 - **Configuration Files:** Adjust settings including formatting for the NameNode and startup configuration for the NameNode and DataNode.
 - **Environment Variables:** Set Hadoop’s runtime parameters.
 
-
 ## Key Features
 
 - **Scalability:** Distribute workloads across multiple nodes for vast data processing.
@@ -21,8 +20,22 @@ Apache Hadoop is used to process and analyze large datasets. This project provid
 
 Before running the project, make sure you have:
 
-- [Docker Desktop](https://www.docker.com/products/docker-desktop) (includes Docker Compose)
-- Sufficient system resources (at least 4GB of RAM recommended)
+- Install `sshpass``
+
+  - On Linux distros and Windows WSL:
+
+   ```bash
+   sudo apt update && apt install sshpass -y
+   ```
+
+- On Mac OSX:
+
+   ```bash
+   # install homebrew
+   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+   brew install sshpass
+   ```
+- Install Python 3.6+
 
 ## Setup Instructions
 
@@ -30,73 +43,22 @@ Before running the project, make sure you have:
    Clone the repository to your local machine:
 
    ```bash
-   git clone https://github.com/hiltonmbr/bigdata-hadoop.git
+   git clone https://github.com/hiltonmbr/hadoop-ansible.git
    ```
 
 2. **Review Configurations:**
    Check and update configuration files and environment variables as needed for your setup.
 
 3. **Start the Cluster:**
-   Launch your Hadoop cluster using Docker Compose:
-
+   Install Ansible:
    ```bash
-   docker compose up -d
+   pip3 install ansible
    ```
-
-4. **Verify Services:**
-   Once started, check the status of all containers:
-   ```bash
-   docker compose ps
-   ```
-
-## Stopping the Cluster
-
-To stop the Hadoop cluster, run:
-
-```bash
-docker compose down
-```
 
 ## Accessing the Services
 
 - **NameNode Web UI:** Open [http://localhost:9870](http://localhost:9870)
 - **Code-Server (Python Notebooks for Hadoop jobs):** Open [http://localhost:8443](http://localhost:8443)
-
-## Troubleshooting
-
-- **Cluster Not Starting:**
-
-  - Ensure Docker Desktop is running.
-  - Inspect container logs for errors:
-    ```bash
-    docker compose logs
-    ```
-
-- **Service Access Issues:**
-  - Verify that no firewall or network settings are blocking the required ports.
-  - Confirm that all containers are running using:
-    ```bash
-    docker compose ps
-    ```
-
-## Usage Example with Code-Server
-
-After setting up the environment:
-
-1. Copy the notebook file `example.ipynb` to the shared workspace folder `./code-server/workspace/example.ipynb`.
-
-2. - Press `Ctrl + Shift + P` to open the command palette.
-
-- Type "Python: Create a virtual environment" and select the option "Python: Create a virtual environment".
-- Select the option "Create a .venv in the current workspace" and press Enter.
-- Select the option "Python 3.12" and press Enter.
-- Wait for the virtual environment to be created.
-
-3. Open the notebook (`example.ipynb`) in your code-server interface to start working with Hadoop jobs.
-
-4. Select Kernel and install suggested extensions `Python` and `Jupyter`.
-
-5. Select Kernel again and create a Python Virtual Environment (`.venv`).
 
 ## Contributing
 

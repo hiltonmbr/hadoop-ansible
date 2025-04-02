@@ -1,0 +1,42 @@
+---
+- name: Update apt and install dependencies
+  ansible.builtin.apt:
+    update_cache: yes
+    name:
+      - openjdk-8-jdk
+    state: present
+
+- name: Create hadoop user
+  ansible.builtin.user:
+    name: "{{ hadoop_user }}"
+    create_home: yes
+    shell: /bin/bash
+
+- name: Download Hadoop
+  ansible.builtin.get_url:
+    url: "{{ hadoop_mirror }}/hadoop-{{ hadoop_version }}/hadoop-{{ hadoop_version }}.tar.gz"
+    dest: /tmp/hadoop-{{ hadoop_version }}.tar.gz
+
+- name: Remove Hadoop directory
+  ansible.builtin.file:
+    path: /opt/hadoop
+    state: absent
+
+- name: Extract Hadoop
+  ansible.builtin.unarchive:
+    src: /tmp/hadoop-{{ hadoop_version }}.tar.gz
+    dest: /opt
+    remote_src: yes
+
+- name: Rename directory 
+  ansible.builtin.command:
+    cmd: mv /opt/hadoop-{{ hadoop_version }} /opt/hadoop
+
+- name: Add permissions
+  ansible.builtin.file:
+    path: /opt/hadoop
+    state: directory
+    owner: "{{ hadoop_user }}"
+    group: "{{ hadoop_user }}"
+    mode: "0755"
+    force: yes
